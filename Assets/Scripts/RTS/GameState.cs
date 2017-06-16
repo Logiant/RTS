@@ -8,7 +8,8 @@ namespace RTS {
 
 		//human player
 		public static Player player;
-
+		//UI root
+		public static UI_Root ui;
 
 		//camera properties
 		public static int ScrollWidth { get { return 15; } }

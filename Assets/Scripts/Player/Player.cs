@@ -9,13 +9,13 @@ public class Player : MonoBehaviour {
 	public string playerName;
 	public bool isHuman;
 
+    public Backpack bp; //total resource count
 
-	public float resources;
 
+	List<Unit> units;
+	List<Structure> structures;
 
-	List<WorldObject> units;
-	List<WorldObject> structures;
-
+	public Command nothing;
 	public List<Command> activeCommands;
 	//list of buildings that produce
 	//list of reseource drop offs
@@ -23,31 +23,43 @@ public class Player : MonoBehaviour {
 	//list of soldiers
 
 	void Awake() {
-		units = new List<WorldObject> ();
-		structures = new List<WorldObject> ();
+		units = new List<Unit> ();
+		structures = new List<Structure> ();
+        bp = new Backpack();
+
+		nothing = new Command (Command.TYPES.NONE);
+
 		activeCommands = new List<Command> ();
-		activeCommands.Add(new Command(Command.TYPES.NONE, new Vector3()));
+		activeCommands.Add(nothing);
 	}
 
-	public void addResources(float amt) {
-		resources += amt;
-	}
-
-	public void addUnit(WorldObject unit) {
+	public void addUnit(Unit unit) {
 		units.Add (unit);
 	}
 
-	public void addStructure(WorldObject unit) {
-		structures.Add (unit);
+	public void addStructure(Structure str) {
+		structures.Add (str);
 	}
 
-	public List<WorldObject> getUnits() {
+	public List<Unit> getUnits() {
 		return units;
 	}
 
-	public List<WorldObject> getStructures() {
+	public List<Structure> getStructures() {
 		return structures;
 	}
+
+    public List<Warehouse> getWarehouses() {
+        List<Warehouse> wh = new List<Warehouse>();
+
+        foreach (Structure s in structures) {
+            if (s is Warehouse) {
+                wh.Add((Warehouse)s);
+            }
+        }
+
+        return wh;
+    }
 
 	// Use this for initialization
 	void Start () {
@@ -59,14 +71,39 @@ public class Player : MonoBehaviour {
 	//add a command from the UI/input
 	public void AddCommand(Command c) {
 		activeCommands.Add (c);
+        List<Unit> idles = nothing.actors;
+        //TODO sort into list(s?) based on qualification
+        //TODO sort list based on distance to job
+
+        for (int i = 0; i < idles.Count; i++) {
+            idles[i].Update(); //TODO there should be a better way to do this
+        }
+
+
 	}
+
+    //TODO do an early update for all units on the 'nothing' job?
+
 
 	// Update is called once per frame
 	void Update () {
-		foreach (Command cmd in activeCommands) {
-			Debug.Log (cmd.Text ());
+		for (int i = activeCommands.Count - 1; i >= 0; i--) {
+			Command cmd = activeCommands[i];
+
+			if (cmd.complete && cmd.type != Command.TYPES.NONE) {
+				activeCommands.Remove (cmd);
+			}
 		}
-		//loop through each command. if it's completed delete it
-	}
+        //update backpack
+        bp.cornQty = 0; bp.woodQty = 0; bp.toolQty = 0;
+        List<Warehouse> wh = getWarehouses();
+        foreach (Warehouse w in wh) {
+            bp.cornQty += w.bp.cornQty;
+            bp.woodQty += w.bp.woodQty;
+            bp.toolQty += w.bp.toolQty;
+        }
+
+
+    }
 
 }

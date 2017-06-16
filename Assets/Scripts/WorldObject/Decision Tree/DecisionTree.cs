@@ -28,7 +28,8 @@ public abstract class DecisionTree {
 	public DecisionTree(Unit parent) {
 		this.parent = parent;
 		tree = new List<State> ();
-		currentCommand = parent.player.activeCommands [0];
+		currentCommand = parent.player.nothing;
+        currentCommand.actors.Add(this.parent);
 	}
 
 	public Unit GetUnit() {
@@ -36,26 +37,31 @@ public abstract class DecisionTree {
 	}
 	//TODO is there a better way to access this?
 	public void SetCommand(Command cmd) {
-		if (currentCommand != null) { //TODO just replace this with the NOTHING command
-			currentCommand.actors.Remove (this.parent);
-		}
+		currentCommand.actors.Remove (this.parent);
 		currentCommand = cmd;
+		currentCommand.actors.Add (this.parent);
 	}
+
+	public void ClearCommand() {
+        SetCommand(parent.player.nothing);
+        parent.Halt();
+	}
+
 	//select one of the in-progress commands
 	public virtual void Update (List<Command> commands) {
+        //TODO this can be delayed with a timer to save processing power for high numbers of units if required - be sure to add some random offset!
 		Descend (commands);
-		//do our current state TODO will this ever be null?
+		//do our current state!
 		currentState.Act();
 
 	}
 
 	protected virtual void Descend(List<Command> commands) {
-		Debug.Log ("Running commands!");
 		foreach (State s in tree) {
 			if (s.Update (commands)) {
 				currentState = s;
 				//we have a new active command!
-				break;
+				return;
 			}
 		}
 	}

@@ -2,15 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Backpack : MonoBehaviour {
+public class Backpack {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public int cornQty = 0;
+    public int toolQty = 0;
+    public int woodQty = 0;
 }

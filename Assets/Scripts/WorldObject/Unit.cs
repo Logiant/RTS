@@ -30,6 +30,8 @@ public class Unit : WorldObject {
 	TYPES type = TYPES.CHURL;
 	//decision tree - controls behavior
 	DecisionTree brain;
+    //backpack - handles items
+    public Backpack bp;
 
 	//movement TODO should this be in a separate script for readability? probably
 	public Vector3 targetPosition;
@@ -37,6 +39,7 @@ public class Unit : WorldObject {
 
 	// Use this for initialization
 	public override void Start () {
+        bp = new Backpack();
 		targetPosition = transform.position;
 		base.Start();
 		PickState (); //instantiates brain
@@ -45,7 +48,6 @@ public class Unit : WorldObject {
 	// Update is called once per frame
 	public override void Update () {
 		base.Update ();
-		Debug.Log (name + " is updating");
 		brain.Update (this.player.activeCommands); //feed in active commands from the player
 	}
 
@@ -59,6 +61,9 @@ public class Unit : WorldObject {
 		}
 	}
 
+    public void Halt() {
+        targetPosition = transform.position;
+    }
 
 	// when a new item has been equipped
 	// update this units decision tree

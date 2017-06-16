@@ -9,17 +9,18 @@ public class StateIdle : State {
 	}
 
 	public override bool Update(List<Command> commands) {
-		foreach (Command cmd in commands) {
-			if (cmd.type == Command.TYPES.NONE && cmd.actors.Count == 0) {
-				cmd.actors.Add (this.parent.GetUnit ());
-				this.parent.SetCommand (cmd);
-				break;
-			}
+		if (parent.currentCommand.type == Command.TYPES.NONE) {
+			return true;
 		}
+		parent.SetCommand (parent.GetUnit ().player.nothing);
+        parent.GetUnit().targetPosition = parent.GetUnit().transform.position;
 		return true; //we can always idle!
 	}
 
 	public override void Act() {
-		//TODO implement -- maybe walk to the town center or home?
+        //if resources in inventory are nonzero
+            //return them to the nearest warehouse
+        //otherwise
+            //go home or something
 	}
 }

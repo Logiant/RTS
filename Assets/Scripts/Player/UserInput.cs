@@ -92,8 +92,9 @@ public class UserInput : MonoBehaviour {
 	//handle mouse input
 	//left click is only used to select things
 	void leftClick() {
-		//do nothing if the pointer is over a UI element
-		if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject ()) {
+		//do nothing if the pointer is over a UI element or the UI wants to use it
+		if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject () ||
+			GameState.ui.LeftClick()) {
 			return;
 		}
 
@@ -134,9 +135,12 @@ public class UserInput : MonoBehaviour {
 
 	void rightClick() {
 		//do nothing if the pointer is over a UI element
-		if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject ()) {
+		if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject () || 
+            GameState.ui.RightClick()) {
 			return;
 		}
+        //do nothing if we're cancelling a build job!!
+
 		//we can't give commands if nothing is selected
 	//	if (!GameState.hasSelected || GameState.Selected.player == null || !GameState.Selected.player.isHuman) {
 	//		return;
@@ -147,8 +151,18 @@ public class UserInput : MonoBehaviour {
 			return;
 		}
 
+        //did we click a resource?
+        Resource r;
+        if ((r=hit.collider.GetComponentInParent<Resource>()) != null) {
+            CmdHarvest hrv = new CmdHarvest(r);
+            r.cmd = hrv;
+            player.AddCommand(hrv);
+        } else {
+            player.AddCommand(new CmdMoveTo(hit.point));
+        }
+
 		//send a command (eg move, rally point, harvest, attack) to the currently selected object
-		player.AddCommand(new Command(Command.TYPES.MOVE, hit.point));
+		
 	//	GameState.Selected.command (hit.collider.transform.root.gameObject, hit.point);
 
 	}

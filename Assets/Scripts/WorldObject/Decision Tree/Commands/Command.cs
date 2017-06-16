@@ -17,7 +17,8 @@ public class Command {
 		ATTACK,   // form an attacking army
 		GARRISON, // garrison a defensive structure
 		BUILD,
-		HARVEST, //harvest any resource (including farms)
+		HARVEST, //harvest any resource (except farms)
+        FARM,
 		CRAFT,
 		MOVE,
 		NONE //idle, do nothing
@@ -27,25 +28,16 @@ public class Command {
 	public List<Unit> actors; //units working on the current command
 	//command type
 	public readonly TYPES type;   //command type
-	//command target
-	WorldObject target;
-	public readonly Vector3 position;
+	//flag for completion
+	public bool complete = false;
 
 	//TODO this is only for the move command
-	public Command(TYPES t, Vector3 position) {
+	public Command(TYPES t) {
 		type = t;
-		this.position = position;
 		actors = new List<Unit> ();
 	}
 
-	public string Text() {
-		switch (type) {
-		default:
-			return "COMMAND: Move to " + position;
-			break;
-		case (TYPES.NONE):
-			return "COMMAND: NONE";
-			break;
-		}
+	public virtual string Text() {
+		return "Do Nothing, " + actors.Count;
 	}
 }

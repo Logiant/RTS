@@ -16,6 +16,10 @@ public class UI_ResourceBar : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		text.text = "Resources: " + GameState.player.resources;
-	}
+        text.text = "Resources:\n";
+
+        text.text += "Food: " +  GameState.player.bp.cornQty + "\n";
+        text.text += "Wood: " + GameState.player.bp.woodQty + "\n";
+        text.text += "Tools: " + GameState.player.bp.toolQty + "\n";
+    }
 }

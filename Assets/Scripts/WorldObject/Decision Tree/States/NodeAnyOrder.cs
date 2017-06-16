@@ -7,17 +7,30 @@ using UnityEngine;
 public class NodeAnyOrder : State {
 
 	List<State> children;
+    State toRun = null;
 
 	public NodeAnyOrder(DecisionTree parent, List<State> children) : base(parent, DecisionTree.STATES.NODE) {
 		this.children = children;
 	}
 
 	public override bool Update(List<Command> commands) {
-		return false;
+        bool canRun = false;
+        foreach (State s in children) {
+            if (s.Update(commands)) {
+                canRun = true;
+                toRun = s;
+                break;
+            }
+        }
+		return canRun;
 	}
 
-	public override void Act() {
-		//TODO implement
-	}
+    public override void Act() {
+        toRun.Act();
+    }
+
+    public override string ToString() {
+        return toRun.ToString();
+    }
 
 }
