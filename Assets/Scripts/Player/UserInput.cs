@@ -80,6 +80,7 @@ public class UserInput : MonoBehaviour {
 		}
 
 		motion.y = 0;
+        motion.Normalize();
 
 		Camera.main.transform.position += motion * Time.deltaTime * GameState.ScrollSpeed;
 
@@ -157,7 +158,7 @@ public class UserInput : MonoBehaviour {
             CmdHarvest hrv = new CmdHarvest(r);
             r.cmd = hrv;
             player.AddCommand(hrv);
-        } else {
+        } else if (hit.collider.CompareTag("Terrain")) {
             player.AddCommand(new CmdMoveTo(hit.point));
         }
 

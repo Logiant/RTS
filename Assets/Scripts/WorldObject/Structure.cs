@@ -4,6 +4,10 @@ using UnityEngine;
 
 public abstract class Structure : WorldObject {
 
+    public Transform accessPoint;
+
+    public int WoodCost;
+
 	// Use this for initialization
 	public override void Start () {
         base.Start();

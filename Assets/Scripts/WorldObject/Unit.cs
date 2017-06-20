@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 /*
  * Units can:
@@ -32,37 +33,51 @@ public class Unit : WorldObject {
 	DecisionTree brain;
     //backpack - handles items
     public Backpack bp;
+    //navmeshagent for movement
+    protected NavMeshAgent nav;
 
 	//movement TODO should this be in a separate script for readability? probably
-	public Vector3 targetPosition;
+	protected Vector3 targetPosition;
 	public float speed = 3.5f; // m/s
 
 	// Use this for initialization
 	public override void Start () {
         bp = new Backpack();
+        nav = GetComponent<NavMeshAgent>();
 		targetPosition = transform.position;
 		base.Start();
 		PickState (); //instantiates brain
 	}
-	
+	//set target position
+    public void MoveTo(Vector3 target) {
+        targetPosition = target;
+        nav.SetDestination(targetPosition);
+        nav.isStopped = (targetPosition == transform.position);
+    }
+
+    public Vector3 GetTarget() {
+        return targetPosition;
+    }
+
 	// Update is called once per frame
 	public override void Update () {
 		base.Update ();
 		brain.Update (this.player.activeCommands); //feed in active commands from the player
+
 	}
 
 	public void FixedUpdate() {
-		Vector3 distance = (targetPosition - transform.position);
+	//	Vector3 distance = (targetPosition - transform.position);
 
-		if (distance.magnitude <= speed * Time.fixedDeltaTime) {
-			transform.position = targetPosition;
-		} else {
-			transform.position = transform.position + distance.normalized * speed * Time.fixedDeltaTime;
-		}
+	//	if (distance.magnitude <= speed * Time.fixedDeltaTime) {
+	//		transform.position = targetPosition;
+	//	} else {
+	//		transform.position = transform.position + distance.normalized * speed * Time.fixedDeltaTime;
+	//	}
 	}
 
     public void Halt() {
-        targetPosition = transform.position;
+        MoveTo(transform.position);
     }
 
 	// when a new item has been equipped

@@ -23,7 +23,7 @@ public abstract class DecisionTree {
 	//the decision tree data structure - we are technically the root node
 	protected List<State> tree;
 	//the command currently being executed
-	public Command currentCommand;
+	protected Command currentCommand;
 
 	public DecisionTree(Unit parent) {
 		this.parent = parent;
@@ -55,6 +55,10 @@ public abstract class DecisionTree {
 		currentState.Act();
 
 	}
+
+    public Command getCommand() {
+        return currentCommand;
+    }
 
 	protected virtual void Descend(List<Command> commands) {
 		foreach (State s in tree) {

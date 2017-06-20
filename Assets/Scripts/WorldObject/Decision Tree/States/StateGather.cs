@@ -11,7 +11,7 @@ public class StateGather : State {
     Warehouse nearest;
 
 	public override bool Update(List<Command> commands) {
-        if (parent.currentCommand.type == Command.TYPES.HARVEST) {
+        if (parent.getCommand().type == Command.TYPES.HARVEST) {
             return true;
         }
         bool avail = false;
@@ -27,29 +27,30 @@ public class StateGather : State {
     }
 
 	public override void Act() {
-        float range = 1.5f;
+        float range = 0.75f;
         //get necessary objects
         Unit body = parent.GetUnit();
-        CmdHarvest cmd = (CmdHarvest)(parent.currentCommand);
+        CmdHarvest cmd = (CmdHarvest)(parent.getCommand());
 
         //check to make sure it's not already harvested
         if (cmd.resource == null) {
             if (body.bp.woodQty == 0) {
+                parent.getCommand().complete = true;
                 parent.ClearCommand();
                 return;
-            } else { //TODO MOVE THIS TO IDLE
+            } else { //TODO MOVE THIS TO IDLE?
                 //TODO this is repeated code, make it a function!!!
                 if (nearest == null) {
                     Debug.Log("ERROR! NO WAREHOUSE FOUND!");
                     return;
                 }
                 //if near the warehouse
-                if ((body.transform.position - nearest.transform.position).magnitude <= range) {
+                if ((body.transform.position - nearest.accessPoint.position).magnitude <= range) {
                     body.Halt();
                     nearest.bp.woodQty += body.bp.woodQty;
                     body.bp.woodQty = 0;
                 } else {
-                    body.targetPosition = nearest.transform.position;
+                    body.MoveTo(nearest.accessPoint.position);
                 }
             }
         }
@@ -60,25 +61,25 @@ public class StateGather : State {
                 return;
             }
             //if near the warehouse
-            if ((body.transform.position - nearest.transform.position).magnitude <= range) {
+            if ((body.transform.position - nearest.accessPoint.position).magnitude <= range) {
                 body.Halt();
                 nearest.bp.woodQty += body.bp.woodQty;
                 body.bp.woodQty = 0;
             } else {
-                body.targetPosition = nearest.transform.position;
+                body.MoveTo(nearest.accessPoint.position);
             }
         } //else if arms are not full
         else {
             //if in harvesting range
-            if ((cmd.resource.transform.position - body.transform.position).magnitude <= range) {
+            if ((cmd.resource.transform.position - body.transform.position).magnitude <= range*3) {
                 body.Halt();
                 body.bp.woodQty += cmd.resource.Harvest();
                 if (body.bp.woodQty >= 2) {
-                    nearest = body.player.getWarehouses()[0];
+                    nearest = RTS.Utility.GetNearestWarehouse(body.transform.position, body.player.getWarehouses());
                 }
             }//else if out of range
             else {
-                body.targetPosition = cmd.resource.transform.position;
+                body.MoveTo(cmd.resource.transform.position);
             }
         }
     }

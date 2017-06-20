@@ -9,11 +9,11 @@ public class StateIdle : State {
 	}
 
 	public override bool Update(List<Command> commands) {
-		if (parent.currentCommand.type == Command.TYPES.NONE) {
+		if (parent.getCommand().type == Command.TYPES.NONE) {
 			return true;
 		}
 		parent.SetCommand (parent.GetUnit ().player.nothing);
-        parent.GetUnit().targetPosition = parent.GetUnit().transform.position;
+        parent.GetUnit().MoveTo(parent.GetUnit().transform.position);
 		return true; //we can always idle!
 	}
 

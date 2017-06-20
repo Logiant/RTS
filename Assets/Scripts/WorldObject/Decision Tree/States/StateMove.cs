@@ -9,7 +9,7 @@ public class StateMove : State {
 	}
 
 	public override bool Update(List<Command> commands) {
-		if (parent.currentCommand.type == Command.TYPES.MOVE) {
+		if (parent.getCommand().type == Command.TYPES.MOVE) {
 			return true; //don't try to move if we're already moving
 		}
 		//look through the commands
@@ -31,15 +31,15 @@ public class StateMove : State {
 	public override void Act() {
 		//TODO implement
 		Unit body = parent.GetUnit();
-		CmdMoveTo moveCmd = (CmdMoveTo)(parent.currentCommand);
+		CmdMoveTo moveCmd = (CmdMoveTo)(parent.getCommand());
 
-        body.targetPosition = moveCmd.position;// + new Vector3(0, 0.5f, 0);
+        body.MoveTo(moveCmd.position);// + new Vector3(0, 0.5f, 0);
 
 		//check for command completion/cancellation
-		if ((body.targetPosition - body.transform.position).sqrMagnitude < 0.1) {
-			this.parent.currentCommand.complete = true;
+		if ((body.GetTarget() - body.transform.position).sqrMagnitude < 0.1) {
+			this.parent.getCommand().complete = true;
 			parent.ClearCommand ();
-			body.targetPosition = body.transform.position;
+			body.MoveTo(body.transform.position);
 		}
 	}
 }

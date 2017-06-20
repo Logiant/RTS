@@ -9,7 +9,7 @@ public class StateBuild : State {
 	}
 
 	public override bool Update(List<Command> commands) {
-        if (parent.currentCommand.type == Command.TYPES.BUILD) {
+        if (parent.getCommand().type == Command.TYPES.BUILD) {
             return true;
         }
         bool avail = false;
@@ -28,7 +28,7 @@ public class StateBuild : State {
 
         //get necessary objects
         Unit body = parent.GetUnit();
-        CmdConstruct cmd = (CmdConstruct)(parent.currentCommand);
+        CmdConstruct cmd = (CmdConstruct)(parent.getCommand());
 
         //check to make sure it's not already built
         if (cmd.foundation == null) {
@@ -41,13 +41,13 @@ public class StateBuild : State {
         //TODO foundation should set "build points" and max # of builders
         if ((center - body.transform.position).magnitude < 5) {
             //stop moving
-            body.targetPosition = body.transform.position;
+            body.MoveTo(body.transform.position);
             //build
             cmd.foundation.Increment();
         } else if (cmd.foundation != null) {
-            body.targetPosition = cmd.foundation.transform.position + new Vector3(0, 0.5f, 0);
+            body.MoveTo(cmd.foundation.transform.position + new Vector3(0, 0.5f, 0));
         } else {
-            body.targetPosition = body.transform.position;
+            body.MoveTo(body.transform.position);
         }
     }
 

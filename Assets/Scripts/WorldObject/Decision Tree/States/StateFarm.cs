@@ -12,7 +12,7 @@ public class StateFarm : State {
 	}
 
 	public override bool Update(List<Command> commands) {
-        if (parent.currentCommand.type == Command.TYPES.FARM) {
+        if (parent.getCommand().type == Command.TYPES.FARM) {
             return true;
         }
         bool avail = false;
@@ -28,11 +28,11 @@ public class StateFarm : State {
     }
 
 	public override void Act() {
-        float range = 2.5f; //range to get to the farm
+        float range = 0.75f; //range to get to the farm
 
         //get necessary objects
         Unit body = parent.GetUnit();
-        CmdFarm cmd = (CmdFarm)(parent.currentCommand);
+        CmdFarm cmd = (CmdFarm)(parent.getCommand());
 
         //TODO implement -- walk to the farm and hang out I guess
         //if inventory is full, walk to the nearest warehouse to drop it off
@@ -43,18 +43,18 @@ public class StateFarm : State {
             }
 
             //if within range of a warehouse, dump everything off!
-            if ((body.transform.position - nearest.transform.position).magnitude < range) {
+            if ((body.transform.position - nearest.accessPoint.position).magnitude < range) {
                 nearest.bp.cornQty += body.bp.cornQty;
                 body.bp.cornQty = 0;
             } else { //move toward nearest
-                body.targetPosition = nearest.transform.position;
+                body.MoveTo(nearest.accessPoint.position);
             }
         }
         //elseif not near the farm, move towards it
-        else if ((body.transform.position - cmd.farm.transform.position).magnitude > range) {
-            body.targetPosition = cmd.farm.transform.position;
+        else if ((body.transform.position - cmd.farm.accessPoint.position).magnitude > range*3) {
+            body.MoveTo(cmd.farm.accessPoint.position);
         } else {
-            body.targetPosition = body.transform.position;
+            body.MoveTo(body.transform.position);
             //if !harvestable, water
             if (!cmd.farm.isHarvestable()) {
                 cmd.farm.Work();
@@ -63,7 +63,7 @@ public class StateFarm : State {
                 qty = cmd.farm.Harvest();
                 body.bp.cornQty += qty;
                 if (qty == 1) { //TODO get nearest warehouse
-                    nearest = body.player.getWarehouses()[0];
+                    nearest = RTS.Utility.GetNearestWarehouse(body.transform.position, body.player.getWarehouses());
                 }
             }
         }
