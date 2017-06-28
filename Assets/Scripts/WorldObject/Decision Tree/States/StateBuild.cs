@@ -14,6 +14,9 @@ public class StateBuild : State {
         }
         bool avail = false;
         foreach (Command cmd in commands) {
+            if (cmd.paused) {
+                continue;
+            }
             if (cmd.type == Command.TYPES.BUILD && cmd.actors.Count < 1) {
                 parent.SetCommand(cmd);
                 avail = true;

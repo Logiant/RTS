@@ -16,6 +16,11 @@ public class StateMove : State {
 		bool validCommand = false;
 		//if one is type.move && command.numActors == 0
 		foreach (Command cmd in commands) {
+            //TODO this seems tedius to put in each loop
+            //maybe do this in update, then create an Evaluate() function that each child state implements
+            if (cmd.paused) {
+                continue;
+            }
 			if (cmd.type == Command.TYPES.MOVE && cmd.actors.Count == 0 && !cmd.complete) {
 			//	cmd.actors.Add (this.parent.GetUnit ());
 				this.parent.SetCommand (cmd);

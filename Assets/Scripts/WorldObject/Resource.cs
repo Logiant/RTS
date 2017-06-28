@@ -5,7 +5,7 @@ using UnityEngine;
 public class Resource : WorldObject {
 
     public int wood = 4;
-    public int stone = 0;
+    public int metal = 0;
 
     public CmdHarvest cmd;
 
@@ -17,19 +17,31 @@ public class Resource : WorldObject {
         timer = harvestTime;
     }
 
-    public int Harvest() {
+    public Backpack.Resources Harvest() {
+        Backpack.Resources res = new Backpack.Resources();
+
         timer -= Time.deltaTime;
         if (timer <= 0) {
             timer += harvestTime;
-            wood--;
-            return 1;
+            if (wood > 0) {
+                res.wood++;
+                wood--;
+            } if (metal > 0) {
+                res.metal++;
+                metal--;
+            }
         }
-        return 0;
+        return res;
     }
 	
 	// Update is called once per frame
 	override public void Update () {
-        if (wood == 0 && stone == 0) {
+        //TODO fix this hack
+        if (cmd != null && cmd.complete) {
+            cmd = null;
+        }
+
+        if (wood <= 0 && metal <= 0) {
             cmd.complete = true;
 
             Destroy(this.gameObject);

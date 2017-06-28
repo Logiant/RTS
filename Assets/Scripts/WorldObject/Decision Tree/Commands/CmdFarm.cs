@@ -7,7 +7,7 @@ public class CmdFarm : Command {
     public Field farm;
 
     //TODO this is only for the move command
-    public CmdFarm(Field farm) : base(TYPES.FARM) {
+    public CmdFarm(Field farm) : base(TYPES.FARM, farm.transform.position) {
         this.farm = farm;
     }
 

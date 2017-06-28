@@ -104,9 +104,9 @@ public class UI_BuildBar : UI_Base {
 			//raycast out to the terrain
 			Vector3 pt = Raycast();
 			//if (building is valid)
-			if (pt != RTS.GameState.InvalidPosition && buildIndicator.isValid() && GameState.player.bp.woodQty >= selected.GetComponent<Structure>().WoodCost) {
+			if (pt != RTS.GameState.InvalidPosition && buildIndicator.isValid() && GameState.player.bp.res.wood >= selected.GetComponent<Structure>().WoodCost) {
                 //remove the resources
-                GameState.player.bp.woodQty -= selected.GetComponent<Structure>().WoodCost;
+                GameState.player.bp.Remove(selected.GetComponent<Structure>().getCost());
 				//place the building
 				Foundation wo = Instantiate(foundation, pt, new Quaternion()).GetComponent<Foundation>();
 				wo.player = RTS.GameState.player;

@@ -155,9 +155,11 @@ public class UserInput : MonoBehaviour {
         //did we click a resource?
         Resource r;
         if ((r=hit.collider.GetComponentInParent<Resource>()) != null) {
-            CmdHarvest hrv = new CmdHarvest(r);
-            r.cmd = hrv;
-            player.AddCommand(hrv);
+            if (r.GetComponentInParent<Resource>().cmd == null) {
+                CmdHarvest hrv = new CmdHarvest(r);
+                r.cmd = hrv;
+                player.AddCommand(hrv);
+            }
         } else if (hit.collider.CompareTag("Terrain")) {
             player.AddCommand(new CmdMoveTo(hit.point));
         }

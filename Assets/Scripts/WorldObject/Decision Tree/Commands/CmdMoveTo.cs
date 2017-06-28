@@ -14,12 +14,11 @@ using UnityEngine;
  */
 public class CmdMoveTo : Command {
 
-	public Vector3 position;
 		
 	//TODO this is only for the move command
-	public CmdMoveTo(Vector3 position) : base(TYPES.MOVE) {
-        this.position = position;
-	}
+	public CmdMoveTo(Vector3 position) : base(TYPES.MOVE, position) {
+
+    }
 
 	public override string Text() {
 		return "Move " + position + ", " + actors.Count;

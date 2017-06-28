@@ -47,6 +47,7 @@ public class Unit : WorldObject {
 		targetPosition = transform.position;
 		base.Start();
 		PickState (); //instantiates brain
+        player.addUnit(this);
 	}
 	//set target position
     public void MoveTo(Vector3 target) {

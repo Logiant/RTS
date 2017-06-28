@@ -8,18 +8,22 @@ using RTS;
 public class UI_ResourceBar : MonoBehaviour {
 
 	Text text;
+    Backpack.Resources res;
 
 	// Use this for initialization
 	void Start () {
 		text = GetComponentInChildren<Text> ();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        text.text = "Resources:\n";
+    }
 
-        text.text += "Food: " +  GameState.player.bp.cornQty + "\n";
-        text.text += "Wood: " + GameState.player.bp.woodQty + "\n";
-        text.text += "Tools: " + GameState.player.bp.toolQty + "\n";
+    // Update is called once per frame
+    void Update () {
+        text.text = "Resources:\n";
+        res = GameState.player.bp.res;
+
+
+        text.text += "Food: " + res.corn + "\n";
+        text.text += "Wood: " + res.wood + "\n";
+        text.text += "Metal: " + res.metal + "\n";
+        text.text += "Tools: " + res.tools + "\n";
     }
 }

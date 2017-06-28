@@ -17,6 +17,9 @@ public class StateFarm : State {
         }
         bool avail = false;
         foreach (Command cmd in commands) {
+            if (cmd.paused) {
+                continue;
+            }
             if (cmd.type == Command.TYPES.FARM && cmd.actors.Count < 1) {
                 parent.SetCommand(cmd);
                 avail = true;
@@ -36,7 +39,7 @@ public class StateFarm : State {
 
         //TODO implement -- walk to the farm and hang out I guess
         //if inventory is full, walk to the nearest warehouse to drop it off
-        if (body.bp.cornQty >= 1) {
+        if (body.bp.res.corn >= 1) {
             if (nearest == null) {
                 Debug.Log("ERROR! NO WAREHOUSE FOUND!!!");
                 return;
@@ -44,8 +47,7 @@ public class StateFarm : State {
 
             //if within range of a warehouse, dump everything off!
             if ((body.transform.position - nearest.accessPoint.position).magnitude < range) {
-                nearest.bp.cornQty += body.bp.cornQty;
-                body.bp.cornQty = 0;
+                nearest.bp.Transfer(ref body.bp.res);
             } else { //move toward nearest
                 body.MoveTo(nearest.accessPoint.position);
             }
@@ -61,7 +63,7 @@ public class StateFarm : State {
             } else {
                 int qty = 0;
                 qty = cmd.farm.Harvest();
-                body.bp.cornQty += qty;
+                body.bp.Add(new Backpack.Resources(qty, 0, 0, 0));
                 if (qty == 1) { //TODO get nearest warehouse
                     nearest = RTS.Utility.GetNearestWarehouse(body.transform.position, body.player.getWarehouses());
                 }

@@ -49,6 +49,9 @@ public abstract class DecisionTree {
 
 	//select one of the in-progress commands
 	public virtual void Update (List<Command> commands) {
+        if (currentCommand.complete || currentCommand.paused) {
+            ClearCommand();
+        }
         //TODO this can be delayed with a timer to save processing power for high numbers of units if required - be sure to add some random offset!
 		Descend (commands);
 		//do our current state!

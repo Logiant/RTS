@@ -30,11 +30,16 @@ public class Command {
 	public readonly TYPES type;   //command type
 	//flag for completion
 	public bool complete = false;
+    //flag for if this command is paused
+    public bool paused = false;
+    //position for flag location
+    public Vector3 position;
 
 	//TODO this is only for the move command
-	public Command(TYPES t) {
+	public Command(TYPES t, Vector3 pos) {
 		type = t;
 		actors = new List<Unit> ();
+        position = pos;
 	}
 
 	public virtual string Text() {

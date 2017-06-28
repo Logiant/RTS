@@ -17,7 +17,7 @@ public class CmdHarvest : Command {
 	public Resource resource;
 		
 	//TODO this is only for the move command
-	public CmdHarvest(Resource res) : base(TYPES.HARVEST) {
+	public CmdHarvest(Resource res) : base(TYPES.HARVEST, res.transform.position) {
 		this.resource = res;
 	}
 

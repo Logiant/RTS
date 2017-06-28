@@ -16,6 +16,9 @@ public class StateGather : State {
         }
         bool avail = false;
         foreach (Command cmd in commands) {
+            if (cmd.paused) {
+                continue;
+            }
             if (cmd.type == Command.TYPES.HARVEST && cmd.actors.Count < 1) {
                 parent.SetCommand(cmd);
                 avail = true;
@@ -34,7 +37,7 @@ public class StateGather : State {
 
         //check to make sure it's not already harvested
         if (cmd.resource == null) {
-            if (body.bp.woodQty == 0) {
+            if (body.bp.resourceQty() == 0) {
                 parent.getCommand().complete = true;
                 parent.ClearCommand();
                 return;
@@ -47,15 +50,14 @@ public class StateGather : State {
                 //if near the warehouse
                 if ((body.transform.position - nearest.accessPoint.position).magnitude <= range) {
                     body.Halt();
-                    nearest.bp.woodQty += body.bp.woodQty;
-                    body.bp.woodQty = 0;
+                    nearest.bp.Transfer(ref body.bp.res);
                 } else {
                     body.MoveTo(nearest.accessPoint.position);
                 }
             }
         }
         //if arms are full && resource exists
-        else if (body.bp.woodQty >= 2) {
+        else if (body.bp.resourceQty() >= 2) {
             if (nearest == null) {
                 Debug.Log("ERROR! NO WAREHOUSE FOUND!");
                 return;
@@ -63,18 +65,18 @@ public class StateGather : State {
             //if near the warehouse
             if ((body.transform.position - nearest.accessPoint.position).magnitude <= range) {
                 body.Halt();
-                nearest.bp.woodQty += body.bp.woodQty;
-                body.bp.woodQty = 0;
+                //TODO empty everything
+                nearest.bp.Transfer(ref body.bp.res);
             } else {
                 body.MoveTo(nearest.accessPoint.position);
             }
         } //else if arms are not full
         else {
             //if in harvesting range
-            if ((cmd.resource.transform.position - body.transform.position).magnitude <= range*3) {
+            if ((cmd.resource.transform.position - body.transform.position).magnitude <= range*7) {
                 body.Halt();
-                body.bp.woodQty += cmd.resource.Harvest();
-                if (body.bp.woodQty >= 2) {
+                body.bp.Add(cmd.resource.Harvest());
+                if (body.bp.resourceQty() >= 2) {
                     nearest = RTS.Utility.GetNearestWarehouse(body.transform.position, body.player.getWarehouses());
                 }
             }//else if out of range

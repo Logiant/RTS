@@ -10,7 +10,14 @@ public class NodeAnyOrder : State {
     State toRun = null;
 
 	public NodeAnyOrder(DecisionTree parent, List<State> children) : base(parent, DecisionTree.STATES.NODE) {
-		this.children = children;
+        //initialize child nodes
+        this.children = new List<State>(children.Count);
+        //randomly place child nodes - order is not important
+        for (int i = children.Count-1; i >= 0; i--) {
+            int index = Random.Range(0, children.Count);
+            this.children.Add(children[index]);
+            children.RemoveAt(index);
+        }
 	}
 
 	public override bool Update(List<Command> commands) {

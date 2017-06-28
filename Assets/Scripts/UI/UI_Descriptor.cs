@@ -17,7 +17,7 @@ public class UI_Descriptor : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if (GameState.hasSelected) {
+		if (GameState.hasSelected && GameState.Selected.GetComponent<Generic>() == null) {
 			description.text = "Selected: " + GameState.Selected.objectName;
 		} else {
 			description.text = "Selected: " + " None";
