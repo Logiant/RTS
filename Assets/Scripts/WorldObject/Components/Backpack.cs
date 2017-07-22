@@ -9,6 +9,10 @@ public class Backpack {
         public int wood;
         public int metal;
 
+		public bool isEmpty() {
+			return (corn == wood && wood == metal && wood == 0);
+		}
+
         public Resources(Resources other) {
             corn = other.corn;
             wood = other.wood;
@@ -18,6 +22,10 @@ public class Backpack {
         public Resources(int c, int w, int m, int t) {
             corn = c; wood = w; metal = m;
         }
+
+		public bool CanTrade(Resources other) {
+			return corn >= -other.corn & wood >= -other.wood & metal >= -other.metal;
+		}
 
         public void Add(Resources other) {
             corn += other.corn;
@@ -85,5 +93,9 @@ public class Backpack {
         Add(other);
         other.Clear();
     }
+
+	public bool CanTrade(Resources other) {
+		return res.CanTrade (other);
+	}
 
 }

@@ -63,8 +63,10 @@ public class Unit : WorldObject {
 	// Update is called once per frame
 	public override void Update () {
 		base.Update ();
-		brain.Update (this.player.activeCommands); //feed in active commands from the player
-
+		//TODO remove after done debugging
+		if (brain != null) {
+			brain.Update (this.player.activeCommands); //feed in active commands from the player
+		}
 	}
 
 	public void FixedUpdate() {

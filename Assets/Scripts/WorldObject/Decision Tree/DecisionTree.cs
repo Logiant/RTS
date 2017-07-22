@@ -12,22 +12,21 @@ public abstract class DecisionTree {
 		FARM,		//farm land to gather food
 		GATHER,		//gather wood or metal
 		IDLE,		//do nothing
-		MOVE,		//move to some point
-		NODE		//something went wrong (used for nodes)
+		MOVE		//move to some point
 	}
 	//current state of this unit
-	public State currentState;
+	public CommandState currentState;
 
 	//parent unit
 	protected Unit parent;
 	//the decision tree data structure - we are technically the root node
-	protected List<State> tree;
+	protected List<CommandState> tree;
 	//the command currently being executed
 	protected Command currentCommand;
 
 	public DecisionTree(Unit parent) {
 		this.parent = parent;
-		tree = new List<State> ();
+		tree = new List<CommandState> ();
 		currentCommand = parent.player.nothing;
         currentCommand.actors.Add(this.parent);
 	}
@@ -55,7 +54,10 @@ public abstract class DecisionTree {
         //TODO this can be delayed with a timer to save processing power for high numbers of units if required - be sure to add some random offset!
 		Descend (commands);
 		//do our current state!
-		currentState.Act();
+		//TODO replace with idle state
+		if (currentState != null) {
+			currentState.Act ();
+		}
 
 	}
 
@@ -64,7 +66,7 @@ public abstract class DecisionTree {
     }
 
 	protected virtual void Descend(List<Command> commands) {
-		foreach (State s in tree) {
+		foreach (CommandState s in tree) {
 			if (s.Update (commands)) {
 				currentState = s;
 				//we have a new active command!

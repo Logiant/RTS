@@ -13,7 +13,7 @@ public class Foundation : Structure {
 
     CmdConstruct activeCommand;
 
-    Backpack.Resources cost;
+    public Backpack.Resources cost;
 
 	// Use this for initialization
 	public override void Start () {

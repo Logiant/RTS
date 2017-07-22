@@ -20,17 +20,10 @@ public class Resource : WorldObject {
     public Backpack.Resources Harvest() {
         Backpack.Resources res = new Backpack.Resources();
 
-        timer -= Time.deltaTime;
-        if (timer <= 0) {
-            timer += harvestTime;
-            if (wood > 0) {
-                res.wood++;
-                wood--;
-            } if (metal > 0) {
-                res.metal++;
-                metal--;
-            }
-        }
+		res.wood++;
+
+		wood--;
+
         return res;
     }
 	
