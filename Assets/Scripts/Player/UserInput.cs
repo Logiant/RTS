@@ -65,26 +65,47 @@ public class UserInput : MonoBehaviour {
 
 	//handle keyboard
 	void cameraMovement() {
+        //panning
 		Vector3 motion = new Vector3 ();
-		if (Input.GetKey (KeyCode.W)) {
+		if (Input.GetKey (KeyCode.W) || Input.mousePosition.y >= Screen.height - GameState.ScrollWidth) {
 			motion += Camera.main.transform.forward;
 		}
-		if (Input.GetKey (KeyCode.S)) {
+		if (Input.GetKey (KeyCode.S) || Input.mousePosition.y <= GameState.ScrollWidth) {
 			motion -= Camera.main.transform.forward;
 		}
-		if (Input.GetKey (KeyCode.D)) {
+		if (Input.GetKey (KeyCode.D) || Input.mousePosition.x >= Screen.width - GameState.ScrollWidth) {
 			motion += Camera.main.transform.right;
 		}
-		if (Input.GetKey (KeyCode.A)) {
+		if (Input.GetKey (KeyCode.A) || Input.mousePosition.x <= GameState.ScrollWidth) {
 			motion -= Camera.main.transform.right;
 		}
-
-		motion.y = 0;
+        motion.y = 0;
         motion.Normalize();
-
-		Camera.main.transform.position += motion * Time.deltaTime * GameState.ScrollSpeed;
-
-
+        Camera.main.transform.position += motion * Time.deltaTime * GameState.ScrollSpeed;
+        //scrolling
+        float scrollAmt = Input.GetAxis("Mouse ScrollWheel");
+        Vector3 pos = Camera.main.transform.position;
+        pos.y += GameState.ZoomSpeed * scrollAmt * Time.deltaTime;
+        pos.y = Mathf.Clamp(pos.y, GameState.MinCameraHeight, GameState.MaxCameraHeight);
+        Camera.main.transform.position = pos;
+        //rotation
+        float rotY = 0.0f;
+        if (Input.GetKey(KeyCode.Q)) {
+            rotY -= 1;
+        }
+        if (Input.GetKey(KeyCode.E)) {
+            rotY += 1;
+        }
+        //rotate the camera
+        Camera.main.transform.Rotate(Vector3.up, rotY * GameState.RotateSpeed * Time.deltaTime, Space.World);
+        //reset the camera
+        if (Input.GetKey(KeyCode.Backspace)) {
+            Vector3 basePos = Camera.main.transform.position;
+            basePos.y = 28.7f;
+            Vector3 baseRot = new Vector3(75, -180, 0);
+            Camera.main.transform.position = basePos;
+            Camera.main.transform.rotation = Quaternion.Euler(baseRot);
+        }
 	}
 
 

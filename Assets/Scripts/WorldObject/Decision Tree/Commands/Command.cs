@@ -42,6 +42,11 @@ public class Command {
         position = pos;
 	}
 
+    public virtual void Cancel() {
+        complete = true;
+    }
+
+
 	public virtual string Text() {
 		return "Do Nothing, " + actors.Count;
 	}

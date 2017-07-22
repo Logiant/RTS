@@ -20,6 +20,13 @@ public class CmdConstruct : Command {
 	public CmdConstruct(Foundation building) : base(TYPES.BUILD, building.transform.position) {
 		this.foundation = building;
 	}
+    
+    public override void Cancel() {
+        base.Cancel();
+        //TODO refund cost seems wrong
+        RTS.GameState.player.bp.Add(foundation.getCost());
+        GameObject.Destroy(foundation.gameObject);
+    }
 
 	public override string Text() {
 		return "Construct " + foundation.GetName() + ", " + actors.Count;

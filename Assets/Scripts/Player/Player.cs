@@ -10,7 +10,12 @@ public class Player : MonoBehaviour {
 	public bool isHuman;
 
     public Backpack bp; //total resource count
+    public ItemStorage ist;
 
+    public GameObject Churl;
+
+
+    private int housing_capacity = 3;
 
 	List<Unit> units;
 	List<Structure> structures;
@@ -28,10 +33,17 @@ public class Player : MonoBehaviour {
 		units = new List<Unit> ();
 		structures = new List<Structure> ();
         bp = new Backpack();
+        ist = new ItemStorage();
         //starting resources
         bp.Add(new Backpack.Resources(15, 15, 10, 10));
 
-		nothing = new Command (Command.TYPES.NONE, RTS.GameState.InvalidPosition);
+        ist.Add(new Item());
+        ist.Add(new Item());
+        ist.Add(new Item());
+        ist.Add(new Item());
+
+
+        nothing = new Command (Command.TYPES.NONE, RTS.GameState.InvalidPosition);
 
 		activeCommands = new List<Command> ();
 		activeCommands.Add(nothing);
@@ -53,6 +65,7 @@ public class Player : MonoBehaviour {
 		return structures;
 	}
 
+    //TODO these should be dynamically changed as new units/models are added
     public List<Warehouse> getWarehouses() {
         List<Warehouse> wh = new List<Warehouse>();
 
@@ -61,8 +74,18 @@ public class Player : MonoBehaviour {
                 wh.Add((Warehouse)s);
             }
         }
-
         return wh;
+    }
+
+    public List<House> getHouses() {
+        List<House> h = new List<House>();
+
+        foreach (Structure s in structures) {
+            if (s is House) {
+                h.Add((House)s);
+            }
+        }
+        return h;
     }
 
     public int getNumHouses() {
@@ -75,6 +98,10 @@ public class Player : MonoBehaviour {
         }
 
         return nHouses;
+    }
+
+    public int getCapacity() {
+        return getNumHouses() * housing_capacity;
     }
 
     // Use this for initialization
@@ -122,7 +149,23 @@ public class Player : MonoBehaviour {
             bp.Transfer(ref w.bp.res);
         }
 
+        Spawn();
+    }
 
+    protected void Spawn() {
+        //TODO put some sort of cooldown system in place
+        //TODO some "critical food" surplus should remain
+        List<House> houses = getHouses();
+        //if we have enough food and houses
+        if (units.Count < getCapacity() && this.bp.res.corn >= 5) {
+            bp.Remove(new Backpack.Resources(5, 0, 0, 0));
+            //spawn a churl @ one of the houses
+            int index = Random.Range(0, houses.Count);
+
+            GameObject go = Instantiate(Churl, houses[index].accessPoint.position, houses[index].transform.rotation) as GameObject;
+            go.GetComponent<WorldObject>().player = this;
+
+        }
     }
 
 }

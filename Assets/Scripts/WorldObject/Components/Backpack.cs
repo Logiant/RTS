@@ -8,50 +8,65 @@ public class Backpack {
         public int corn;
         public int wood;
         public int metal;
-        public int tools;
 
         public Resources(Resources other) {
             corn = other.corn;
             wood = other.wood;
             metal = other.metal;
-            tools = other.tools;
         }
 
         public Resources(int c, int w, int m, int t) {
-            corn = c; wood = w; metal = m; tools = t;
+            corn = c; wood = w; metal = m;
         }
 
         public void Add(Resources other) {
             corn += other.corn;
             wood += other.wood;
             metal += other.metal;
-            tools += other.tools;
         }
 
         public void Remove(Resources other) {
             corn -= other.corn;
             wood -= other.wood;
             metal -= other.metal;
-            tools -= other.tools;
         }
 
         public void Clear() {
             corn = 0;
             wood = 0;
             metal = 0;
-            tools = 0;
         }
 
         public override string ToString() {
-            return "Corn: " + corn + " Wood: " + wood + " Metal: " + metal + " Tools: " + tools ;
+            return "Corn: " + corn + " Wood: " + wood + " Metal: " + metal;
         }
     }
 
 
     public Resources res = new Resources();
 
+    public Item item = null;
+
     public int resourceQty() {
         return res.wood + res.metal;
+    }
+
+    public bool giveItem(Item toGive) {
+        bool hadItem = (item == null);
+        if (!hadItem) {
+            item = toGive;
+        }
+        return hadItem;
+    }
+
+    public Item takeItem() {
+        Item toGive = item;
+        item = null;
+        return toGive;
+    }
+
+    public bool Contains (Backpack.Resources other) {
+        return (res.corn >= other.corn & res.wood >= other.wood & res.metal >= other.metal);
     }
 
     public void Clear() {

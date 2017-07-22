@@ -18,6 +18,7 @@ public class StateIdle : State {
 	}
 
 	public override void Act() {
+        //TODO do something
         //if resources in inventory are nonzero
             //return them to the nearest warehouse
         //otherwise

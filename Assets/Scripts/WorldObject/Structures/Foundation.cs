@@ -13,6 +13,8 @@ public class Foundation : Structure {
 
     CmdConstruct activeCommand;
 
+    Backpack.Resources cost;
+
 	// Use this for initialization
 	public override void Start () {
 		timer = buildTime;
@@ -20,6 +22,16 @@ public class Foundation : Structure {
 
     public string GetName() {
         return finalBuilding.GetComponent<WorldObject>().objectName;
+    }
+
+    public void Deliver(ref Backpack.Resources res) {
+        //TODO only remove resources needed :'(
+        cost.Remove(res);
+        res.Clear();
+    }
+
+    public bool Ready() {
+        return cost.wood == 0;
     }
 
     public void Increment() {
@@ -47,9 +59,15 @@ public class Foundation : Structure {
 		}
 	}
 
-	public void Run(GameObject final) {
+    public override Backpack.Resources getCost() {
+        return cost;
+    }
+
+    public void Run(GameObject final) {
 		finalBuilding = Instantiate (final, transform.position, transform.rotation);
 		finalBuilding.SetActive (false);
+        //get the cost
+        cost = new Backpack.Resources(final.GetComponent<Structure>().getCost());
 		//set the size of this object
 		Bounds b = new Bounds (Vector3.zero, Vector3.zero);
 

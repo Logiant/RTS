@@ -33,8 +33,10 @@ public class UI_BuildBar : UI_Base {
 			go.transform.position = go.transform.position + new Vector3 (100f * i, -25, 0);
 			Button b = go.GetComponent<Button> ();
 			buttons.Add(b);
-			//update button appearance and add a callback
-			b.GetComponentInChildren<Text> ().text = structures [i].GetComponent<WorldObject>().objectName;
+			//update button appearance
+		//	b.GetComponentInChildren<Text> ().text = structures [i].GetComponent<WorldObject>().objectName;
+            b.GetComponent<Image>().sprite = structures[i].GetComponent<Structure>().icon;
+            //callback
 			b.onClick.AddListener (() => BuildStructure (b));
 		}
         costText.text = "";

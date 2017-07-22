@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class Structure : WorldObject {
 
     public Transform accessPoint;
-    public int WoodCost;
+    public int WoodCost = 5;
+
+    public Sprite icon;
 
     private Backpack.Resources res;
 
@@ -18,7 +21,7 @@ public abstract class Structure : WorldObject {
 
     }
 
-    public Backpack.Resources getCost() {
+     public virtual Backpack.Resources getCost() {
         return new Backpack.Resources(0, WoodCost, 0, 0);
     }
 }

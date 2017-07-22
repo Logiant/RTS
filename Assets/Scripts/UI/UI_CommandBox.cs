@@ -38,7 +38,8 @@ public class UI_CommandBox : UI_Base {
 
     protected bool CanCancel(Command cmd) {
         return cmd.type == Command.TYPES.MOVE || cmd.type == Command.TYPES.ATTACK ||
-               cmd.type == Command.TYPES.GARRISON || cmd.type == Command.TYPES.HARVEST;
+               cmd.type == Command.TYPES.GARRISON || cmd.type == Command.TYPES.HARVEST ||
+               cmd.type == Command.TYPES.BUILD;
     }
 
     public void SetButtonText() {
@@ -58,7 +59,7 @@ public class UI_CommandBox : UI_Base {
             SetButtonText();
         } else {
             //delete this command!
-            cmd.cmd.complete = true;
+            cmd.cmd.Cancel();
         }
 
 
