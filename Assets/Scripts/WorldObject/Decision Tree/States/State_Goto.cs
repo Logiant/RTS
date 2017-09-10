@@ -19,6 +19,8 @@ public class State_Goto : State {
 			return;
 		}
 
+        //TODO fail out if we aren't moving more than 0.01m or so
+
 		//if the body isn't moving toward the target, move it. flow = running
 		if ((parent.GetUnit ().transform.position - targetPosition).magnitude > 2) {
 			//TODO don't assume pathfinding will always find a way

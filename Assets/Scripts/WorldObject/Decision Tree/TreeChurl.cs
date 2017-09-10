@@ -8,12 +8,16 @@ using UnityEngine;
 public class TreeChurl : DecisionTree {
 
 	public TreeChurl(Unit body) : base(body) {
-		//tree priority goes from left to right
-		//it's effectively a FIFO queue with depth-first search
+        //tree priority goes from left to right
+        //it's effectively a FIFO queue with depth-first search
 
-		//the labor branch is all equally-likely labor tasks
-		tree.Add (new State_CmdGather (this));
+        //the labor branch is all equally-likely labor tasks
+        tree.Add(new State_CmdBuild(this));
+        tree.Add (new State_CmdGather (this));
+        tree.Add(new State_CmdFarm(this));
+        tree.Add(new State_CmdCraft(this));
 
 		tree.Add (new State_CmdMove (this));
-	}
+        tree.Add(new State_CmdIdle(this));
+    }
 }

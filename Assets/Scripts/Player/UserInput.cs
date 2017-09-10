@@ -67,16 +67,16 @@ public class UserInput : MonoBehaviour {
 	void cameraMovement() {
         //panning
 		Vector3 motion = new Vector3 ();
-		if (Input.GetKey (KeyCode.W) || Input.mousePosition.y >= Screen.height - GameState.ScrollWidth) {
+		if (Input.GetKey (KeyCode.W) || (Input.mousePosition.y >= Screen.height - GameState.ScrollWidth && Input.mousePosition.y <= Screen.height)) {
 			motion += Camera.main.transform.forward;
 		}
-		if (Input.GetKey (KeyCode.S) || Input.mousePosition.y <= GameState.ScrollWidth) {
+		if (Input.GetKey (KeyCode.S) || (Input.mousePosition.y <= GameState.ScrollWidth && Input.mousePosition.y >= 0)) {
 			motion -= Camera.main.transform.forward;
 		}
-		if (Input.GetKey (KeyCode.D) || Input.mousePosition.x >= Screen.width - GameState.ScrollWidth) {
+		if (Input.GetKey (KeyCode.D) || (Input.mousePosition.x >= Screen.width - GameState.ScrollWidth) && Input.mousePosition.x <= Screen.width) {
 			motion += Camera.main.transform.right;
 		}
-		if (Input.GetKey (KeyCode.A) || Input.mousePosition.x <= GameState.ScrollWidth) {
+		if (Input.GetKey (KeyCode.A) || (Input.mousePosition.x <= GameState.ScrollWidth && Input.mousePosition.x >= 0)) {
 			motion -= Camera.main.transform.right;
 		}
         motion.y = 0;
