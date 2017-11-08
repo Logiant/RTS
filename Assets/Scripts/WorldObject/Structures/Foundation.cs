@@ -13,7 +13,7 @@ public class Foundation : Structure {
 
     CmdConstruct activeCommand;
 
-    public Backpack.Resources cost;
+    public Backpack cost = new Backpack();
 
 	// Use this for initialization
 	public override void Start () {
@@ -31,14 +31,12 @@ public class Foundation : Structure {
     }
 
     public bool Ready() {
-        return cost.wood == 0;
+        return cost.res.wood == 0;
     }
 
-    public void Increment() {
-        if (timer <= 0) {
-            timer = buildTime;
-            count--;
-        }
+    public bool Increment() {
+        count--;
+        return count == 0;
     }
 
 	// Update is called once per frame
@@ -60,14 +58,18 @@ public class Foundation : Structure {
 	}
 
     public override Backpack.Resources getCost() {
-        return cost;
+        return cost.res.negative();
     }
 
     public void Run(GameObject final) {
 		finalBuilding = Instantiate (final, transform.position, transform.rotation);
 		finalBuilding.SetActive (false);
         //get the cost
-        cost = new Backpack.Resources(final.GetComponent<Structure>().getCost());
+      //  Debug.Log("Final: " + final.GetComponent<Structure>().getCost());
+      // Debug.Log("Final: " + final.GetComponent<Structure>().getCost().negative());
+      //  Debug.Log("Cost: " + cost);
+      //  Debug.Log("Cost.res: " + cost.res);
+        cost.res = new Backpack.Resources(final.GetComponent<Structure>().getCost().negative());
 		//set the size of this object
 		Bounds b = new Bounds (Vector3.zero, Vector3.zero);
 

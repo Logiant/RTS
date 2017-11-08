@@ -63,7 +63,7 @@ public class State_CmdGather : CommandState {
 			trade.SetTrade(nearest.accessPoint.position, ref nearest.bp , this.parent.GetUnit().bp.res);
 		}
 
-		if (flow == FLOW.pass) {
+		if (flow == FLOW.pass) { //if we pass, loop and continue harvesting
 			Reset ();
 			if (parent.getCommand() is CmdHarvest) {
 				CmdHarvest ch = (CmdHarvest)parent.getCommand();

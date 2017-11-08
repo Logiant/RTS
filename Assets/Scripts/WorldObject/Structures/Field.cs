@@ -4,33 +4,44 @@ using UnityEngine;
 
 public class Field : Structure {
 
-    float growTime = 10;
-    float timer = 0;
-    
+    public GameObject crop;
+    float minCropHt = -1.58f;
+    float maxCropHt = 0.3f;
+
+    public int currentTicks = 0;
+    int maxTicks = 10;
 
 	// Use this for initialization
 	public override void Start () {
         base.Start();
         player.AddCommand(new CmdFarm(this));
-        timer = growTime;
+
+        Vector3 cropPos = crop.transform.position;
+        cropPos.y = minCropHt;
+        crop.transform.position = cropPos;
     }
 
-    public void Work() {
-        //water the plants or whatever
-        timer -= Time.deltaTime;
+    public void Tend() {
+        //add some crops or some shit
+        if (currentTicks < maxTicks) {
+            currentTicks++;
+
+            Vector3 cropPos = crop.transform.position;
+            cropPos.y = (currentTicks/(float)maxTicks)*(maxCropHt - minCropHt) + minCropHt;
+            crop.transform.position = cropPos;
+        }
     }
 
     public bool isHarvestable() {
-        return timer <= 0;
+        return currentTicks == maxTicks;
     }
 
     public int Harvest() {
-        timer = growTime;
-        return 1;
+        Vector3 cropPos = crop.transform.position;
+        cropPos.y = minCropHt;
+        crop.transform.position = cropPos;
+
+        currentTicks = 0;
+        return maxTicks;
     }
-
-	// Update is called once per frame
-	public override void Update () {
-
-	}
 }

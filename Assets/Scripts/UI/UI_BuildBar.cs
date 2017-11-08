@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 using RTS;
 using System;
@@ -80,10 +81,13 @@ public class UI_BuildBar : UI_Base {
 				buildIndicator.Clear ();
 				return;
 			}
-			//raycast through the mouse to the terrain
-			Vector3 position = Raycast();
-			//draw a ghost of the selected building
-
+            //if mouse not over the UI
+            Vector3 position = GameState.InvalidPosition;
+            if (!EventSystem.current.IsPointerOverGameObject()) {
+                //raycast through the mouse to the terrain
+                position = Raycast();
+                //draw a ghost of the selected building
+            }
 			buildIndicator.transform.position = position;
 
 		}
@@ -113,7 +117,9 @@ public class UI_BuildBar : UI_Base {
 				Foundation wo = Instantiate(foundation, pt, new Quaternion()).GetComponent<Foundation>();
 				wo.player = RTS.GameState.player;
 				wo.Run (selected);
-                Deselect();
+                if (!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) {
+                    Deselect();
+                }
 			}
 
 		}

@@ -4,60 +4,70 @@ using UnityEngine;
 
 public class State_CmdBuild : CommandState {
 
-	//child states of Gather
-//	State_Goto move;
 
-	//get the parent tree in the constructor
-	public State_CmdBuild(DecisionTree p) : base(p) {
+    Behavior_Nodal nodes;
 
-        type = Command.TYPES.BUILD;
-        //move = new State_Goto (p);
-		Reset ();
-	
-	}
+    //child states of Build
+    State_Goto deliver; //TODO replace this with a delivery state
+    State_Construct construct;
+    //DELIVER
+    //CONSTRUCT
 
-	public override bool Update(List<Command> commands) {
-        /*	if (parent.getCommand ().type == this.type) {
-                return true; //we have a command of equal priority
+    //current command type
+    Command.TYPES type = Command.TYPES.BUILD;
+
+    //get the parent tree in the constructor
+    public State_CmdBuild(DecisionTree p) : base(p) {
+
+        nodes = new Behavior_Nodal();
+        deliver = new State_Goto(p);
+        construct = new State_Construct(p);
+
+
+        nodes.Add(deliver);
+        nodes.Add(construct);
+
+        Reset();
+
+    }
+
+    public override bool Update(List<Command> commands) {
+        if (parent.getCommand().type == this.type) {
+            return true; //we have a command of equal priority
+        }
+        //else, pick a new, higher priority command
+        bool avail = false;
+        foreach (Command cmd in commands) {
+            if (cmd.type == this.type && cmd.actors.Count < 1 && !cmd.complete) {
+                //we've found an open command of this type
+                parent.SetCommand(cmd);
+                parent.currentState = this;
+                avail = true;
+                Reset();
+                CmdConstruct cc = (CmdConstruct)cmd;
+                //initialize substates
+                deliver.SetPosition(cc.foundation.transform.position);
+                construct.SetTarget(cc.foundation);
+
+                break;
             }
-            //else, pick a new, higher priority command
-            bool avail = false;
-            foreach (Command cmd in commands) {
-                if (cmd.type == this.type && cmd.actors.Count < 1 && !cmd.complete) {
-                    //we've found an open command of this type
-                    parent.SetCommand(cmd);
-                    parent.currentState = this;
-                    avail = true;
-                    Reset ();
-                    CmdMoveTo ch = (CmdMoveTo)cmd;
-                    move.SetPosition (ch.position);
 
-                    break;
-                }
-
-            }
-            return avail;
-            */
-        return false;
-	}
+        }
+        return avail;
+    }
 
 	//each state must DO something
 	public override void Act () {
-	//	flow = move.getFlow ();
-	//	if (flow == FLOW.fresh || flow == FLOW.run) {
-	//		move.Act ();
-	//	} else if (flow == FLOW.pass) {
-	//		parent.getCommand ().complete = true;
-	//		parent.ClearCommand ();
-	//	} else { //failed to move
-	//		parent.ClearCommand();
-	//	}
-	}
+        flow = nodes.Act();
+        if (flow == FLOW.pass) {
+            parent.ClearCommand();
+        }
+    }
 
 	//each sate must reset-able
 	public override void Reset() {
-		flow = FLOW.fresh;
-	//	move.Reset ();
-	}
+        flow = FLOW.fresh;
+        nodes.Reset();
+    }
 
 }

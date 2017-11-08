@@ -18,7 +18,6 @@ public class State_Goto : State {
 			flow = FLOW.fail;
 			return;
 		}
-
         //TODO fail out if we aren't moving more than 0.01m or so
 
 		//if the body isn't moving toward the target, move it. flow = running

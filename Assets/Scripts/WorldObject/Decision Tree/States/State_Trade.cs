@@ -31,7 +31,7 @@ public class State_Trade : State {
 			flow = FLOW.fail;
 			return;
 		}
-
+        Debug.Log("Trading");
 		flow = nodes.Act();
 	}
 

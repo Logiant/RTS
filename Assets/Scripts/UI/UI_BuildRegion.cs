@@ -15,6 +15,7 @@ public class UI_BuildRegion : MonoBehaviour {
 	void Start () {
 		mesh = GetComponentInChildren<MeshRenderer> ();
 		baseSize = mesh.transform.localScale;
+        Reset();
 		ColorMesh ();
 	}
 
@@ -22,8 +23,9 @@ public class UI_BuildRegion : MonoBehaviour {
 		ghost = null;
 		mesh.transform.localScale = baseSize;
 		mesh.transform.localPosition = new Vector3 (0, 0.5f, 0);
-		ColorMesh ();
-		Reset ();
+        transform.position = RTS.GameState.InvalidPosition;
+        Reset();
+        ColorMesh();
 	}
 
 	public bool isValid() {
@@ -43,6 +45,7 @@ public class UI_BuildRegion : MonoBehaviour {
 		}
 		mesh.transform.localScale = b.extents*2;
 		mesh.transform.localPosition = new Vector3(0, mesh.transform.localScale.y / 2, 0);
+        Reset();
 		ColorMesh ();
 	}
 
@@ -55,6 +58,7 @@ public class UI_BuildRegion : MonoBehaviour {
 		if (!other.CompareTag ("Terrain")) {
 			count++;
 			ColorMesh ();
+            Debug.Log(other.gameObject + " entered; " + count);
 		}
 	}
 
@@ -63,8 +67,9 @@ public class UI_BuildRegion : MonoBehaviour {
 		if (!other.CompareTag ("Terrain")) {
 			count--;
 			ColorMesh ();
-		}
-	}
+            Debug.Log(other.gameObject + " exited; " + count);
+        }
+    }
 
 	private void ColorMesh() {
 		if (ghost == null) {

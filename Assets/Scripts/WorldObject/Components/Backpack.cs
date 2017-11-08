@@ -45,11 +45,18 @@ public class Backpack {
             metal = 0;
         }
 
+        public Resources negative() {
+            return new Resources(-1 * corn, -1 * wood, -1 * metal, 0);
+        }
+
         public override string ToString() {
             return "Corn: " + corn + " Wood: " + wood + " Metal: " + metal;
         }
     }
 
+    public override string ToString() {
+        return "A Backpack";
+    }
 
     public Resources res = new Resources();
 
