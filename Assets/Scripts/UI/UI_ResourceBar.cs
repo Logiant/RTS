@@ -56,7 +56,7 @@ public class UI_ResourceBar : MonoBehaviour {
         text.text += "Food: " + res.corn + "\n";
         text.text += "Wood: " + res.wood + "\n";
         text.text += "Metal: " + res.metal + "\n";
-        text.text += "Tools: " + GameState.player.ist.GetNumTools() + "\n";
+        text.text += "Demand: " + GameState.player.craft.TotalDemand() + "\n";
 
         text.text += "Idle: " + GameState.player.nothing.actors.Count;
 
@@ -72,7 +72,7 @@ public class UI_ResourceBar : MonoBehaviour {
         food.Add(res.corn);
         wood.Add(res.wood);
         metal.Add(res.metal);
-        tools.Add(GameState.player.ist.GetNumTools());
+        tools.Add(GameState.player.ist.GetQty(Tool.TOOLTYPES.HAMMER));
         //take a moving avg
         if (food.Count > avgSamples) {
             food.RemoveAt(0);

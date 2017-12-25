@@ -75,4 +75,5 @@ public abstract class DecisionTree {
 		}
 	}
 
+    public abstract void Reset();
 }

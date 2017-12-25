@@ -9,6 +9,7 @@ public class State_CmdGather : CommandState {
 	//child states of Gather
 	State_Harvest harvest;
 	State_Trade trade;
+    State_GetTools getTool;
 	//helper bool
 	bool oneshot = false;
 
@@ -21,6 +22,9 @@ public class State_CmdGather : CommandState {
 		nodes = new Behavior_Nodal ();
 		harvest = new State_Harvest (p);
 		trade = new State_Trade (p);
+        getTool = new State_GetTools(p);
+
+        nodes.Add(getTool);
 
 		nodes.Add (harvest);
 
@@ -45,7 +49,7 @@ public class State_CmdGather : CommandState {
 				Reset ();
 				CmdHarvest ch = (CmdHarvest)cmd;
 				harvest.SetTarget (ch.resource);
-
+                getTool.SetCommand(ch);
 				break;
 			}
 

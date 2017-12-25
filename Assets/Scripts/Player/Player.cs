@@ -23,6 +23,7 @@ public class Player : MonoBehaviour {
     public GameObject CmdFlag;
 
 	public Command nothing;
+    public CmdCraft craft;
 	public List<Command> activeCommands;
 	//list of buildings that produce
 	//list of reseource drop offs
@@ -37,16 +38,17 @@ public class Player : MonoBehaviour {
         //starting resources
         bp.Add(new Backpack.Resources(15, 15, 10, 10));
 
-        ist.Add(new Item());
-        ist.Add(new Item());
-        ist.Add(new Item());
-        ist.Add(new Item());
+        ist.Add(new Tool(Tool.TOOLTYPES.AXE));
+        ist.Add(new Tool(Tool.TOOLTYPES.HAMMER));
+        ist.Add(new Tool(Tool.TOOLTYPES.SAW));
+        ist.Add(new Tool(Tool.TOOLTYPES.SCYTHE));
 
 
-        nothing = new Command (Command.TYPES.NONE, RTS.GameState.InvalidPosition);
-
+        nothing = new Command (Command.TYPES.NONE, RTS.GameState.InvalidPosition, this);
+        craft = new CmdCraft(this);
 		activeCommands = new List<Command> ();
 		activeCommands.Add(nothing);
+        activeCommands.Add(craft);
 	}
 
 	public void addUnit(Unit unit) {
@@ -98,6 +100,21 @@ public class Player : MonoBehaviour {
         }
 
         return nHouses;
+    }
+
+    public List<Workshop> getWorkshops() {
+        List<Workshop> w = new List<Workshop>();
+
+        foreach (Structure s in structures) {
+            if (s is Workshop) {
+                w.Add((Workshop)s);
+            }
+        }
+        return w;
+    }
+
+    public int getNumWorkshops() {
+        return getWorkshops().Count;
     }
 
     public int getCapacity() {

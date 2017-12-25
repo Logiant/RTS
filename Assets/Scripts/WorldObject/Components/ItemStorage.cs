@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class ItemStorage  {
 
-    List<Item> items;
+    List<Tool> tools;
 
     public ItemStorage() {
-        items = new List<Item>();
+    //    items = new List<Item>();
+        tools = new List<Tool>();
     }
 
     //TODO RequestItem() -- increments demand by 1, Take decrements demand by 1, CancelOrder() decrements command by 1
@@ -16,24 +17,37 @@ public class ItemStorage  {
     //TODO
     //getTool(enum type);
     //getWeapon(enum type);
-    public void Add(Item i) {
-        items.Add(i);
-    }
-
-    public Item Take() {
-        Item i = null;
-        if (items.Count > 0) {
-            i = items[0];
-            items.RemoveAt(0);
-        }
-        return i;
+    public void Add(Tool i) {
+        tools.Add(i);
     }
 
     public bool HasItems() {
-        return items.Count > 0;
+        return tools.Count > 0;
     }
 
-    public int GetNumTools() {
-        return items.Count;
+    public Tool take(Tool.TOOLTYPES tp) {
+        Tool t = null;
+        for (int i = 0; i < tools.Count; i++) {
+            if (tools[i].GetToolType() == tp) {
+                t = tools[i];
+                tools.RemoveAt(i);
+                break;
+            }
+        }
+        return t;
+    }
+
+    public int GetQty(Tool.TOOLTYPES tp) {
+        int qty = 0;
+        foreach (Tool t in tools) {
+            if (t.GetToolType() == tp) {
+                qty++;
+            }
+        }
+        return qty;
+    }
+
+    public int[] GetQty() {
+        return new int[] {GetQty(Tool.TOOLTYPES.AXE), GetQty(Tool.TOOLTYPES.HAMMER), GetQty(Tool.TOOLTYPES.SAW), GetQty(Tool.TOOLTYPES.SCYTHE)};
     }
 }

@@ -17,7 +17,7 @@ public class CmdConstruct : Command {
 	public Foundation foundation;
 		
 	//TODO this is only for the move command
-	public CmdConstruct(Foundation building) : base(TYPES.BUILD, building.transform.position) {
+	public CmdConstruct(Foundation building) : base(TYPES.BUILD, building.transform.position, building.player) {
 		this.foundation = building;
 	}
     

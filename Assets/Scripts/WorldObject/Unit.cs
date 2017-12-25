@@ -29,12 +29,14 @@ public enum TYPES {
 public class Unit : WorldObject {
 	//unit type - defines behavior, 
 	TYPES type = TYPES.CHURL;
-	//decision tree - controls behavior
-	DecisionTree brain;
+    //decision tree - controls behavior
+    DecisionTree brain;
     //backpack - handles items
     public Backpack bp;
     //navmeshagent for movement
     protected NavMeshAgent nav;
+    //equipped tool
+    public Tool tool = new Tool();
 
 	//movement TODO should this be in a separate script for readability? probably
 	protected Vector3 targetPosition;
@@ -46,7 +48,8 @@ public class Unit : WorldObject {
         nav = GetComponent<NavMeshAgent>();
 		targetPosition = transform.position;
 		base.Start();
-		PickState (); //instantiates brain
+        brain = new TreeChurl(this);
+        PickState (); //instantiates brain
         player.addUnit(this);
 	}
 	//set target position
@@ -69,32 +72,43 @@ public class Unit : WorldObject {
 		}
 	}
 
-	public void FixedUpdate() {
-	//	Vector3 distance = (targetPosition - transform.position);
-
-	//	if (distance.magnitude <= speed * Time.fixedDeltaTime) {
-	//		transform.position = targetPosition;
-	//	} else {
-	//		transform.position = transform.position + distance.normalized * speed * Time.fixedDeltaTime;
-	//	}
-	}
-
     public void Halt() {
         MoveTo(transform.position);
+    }
+
+    public Tool EquipTool(Tool t) {
+        Tool tmp = tool;
+        tool = t;
+        Debug.Log(t.GetToolType() + " TOOL TYPE");
+        switch(t.GetToolType()) {
+            case Tool.TOOLTYPES.AXE:
+                type = TYPES.GATHERER;
+                break;
+            case Tool.TOOLTYPES.HAMMER:
+                type = TYPES.CRAFTSMAN;
+                break;
+            case Tool.TOOLTYPES.SCYTHE:
+                type = TYPES.FARMER;
+                break;
+            case Tool.TOOLTYPES.SAW:
+                type = TYPES.LABORER;
+                break;
+            case Tool.TOOLTYPES.NONE:
+                type = TYPES.CHURL;
+                break;
+        }
+        PickState();
+        return tmp;
     }
 
 	// when a new item has been equipped
 	// update this units decision tree
 	private void PickState() {
-		switch (type) {
-		case TYPES.CHURL:
-		case TYPES.GATHERER:
-		case TYPES.FARMER:
-		case TYPES.LABORER:
-		case TYPES.CRAFTSMAN:
-		case TYPES.SOLDIER:
-			brain = new TreeChurl (this);
-			break;
-		}
+        //TODO clear the old brain
+        brain.Reset();
 	}
+
+    public TYPES GetUnitType() {
+        return type;
+    }
 }

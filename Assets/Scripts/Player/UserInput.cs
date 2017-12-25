@@ -177,12 +177,12 @@ public class UserInput : MonoBehaviour {
         Resource r;
         if ((r=hit.collider.GetComponentInParent<Resource>()) != null) {
             if (r.GetComponentInParent<Resource>().cmd == null) {
-                CmdHarvest hrv = new CmdHarvest(r);
+                CmdHarvest hrv = new CmdHarvest(r, player);
                 r.cmd = hrv;
                 player.AddCommand(hrv);
             }
         } else if (hit.collider.CompareTag("Terrain")) {
-            player.AddCommand(new CmdMoveTo(hit.point));
+            player.AddCommand(new CmdMoveTo(hit.point, player));
         }
 
 		//send a command (eg move, rally point, harvest, attack) to the currently selected object

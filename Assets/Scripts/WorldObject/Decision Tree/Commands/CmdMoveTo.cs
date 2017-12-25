@@ -16,7 +16,7 @@ public class CmdMoveTo : Command {
 
 		
 	//TODO this is only for the move command
-	public CmdMoveTo(Vector3 position) : base(TYPES.MOVE, position) {
+	public CmdMoveTo(Vector3 position, Player owner) : base(TYPES.MOVE, position, owner) {
 
     }
 

@@ -11,6 +11,7 @@ public class State_CmdFarm : CommandState {
     State_Tend tend;
     //Harvest
     State_Harvest_Farm farm;
+    State_GetTools getTool;
 
     //current command type
     Command.TYPES type = Command.TYPES.FARM;
@@ -22,7 +23,9 @@ public class State_CmdFarm : CommandState {
 
         tend = new State_Tend(p);
         farm = new State_Harvest_Farm(p);
+        getTool = new State_GetTools(p);
 
+        nodes.Add(getTool);
         nodes.Add(tend);
         nodes.Add(farm);
 
@@ -47,6 +50,7 @@ public class State_CmdFarm : CommandState {
                 //initialize substates
                 tend.SetTarget(cf.farm);
                 farm.SetTarget(cf.farm);
+                getTool.SetCommand(cf);
                 break;
             }
 

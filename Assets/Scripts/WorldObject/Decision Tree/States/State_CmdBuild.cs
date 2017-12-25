@@ -10,6 +10,7 @@ public class State_CmdBuild : CommandState {
     //child states of Build
     State_Goto deliver; //TODO replace this with a delivery state
     State_Construct construct;
+    State_GetTools getTool;
     //DELIVER
     //CONSTRUCT
 
@@ -22,8 +23,9 @@ public class State_CmdBuild : CommandState {
         nodes = new Behavior_Nodal();
         deliver = new State_Goto(p);
         construct = new State_Construct(p);
+        getTool = new State_GetTools(p);
 
-
+        nodes.Add(getTool);
         nodes.Add(deliver);
         nodes.Add(construct);
 
@@ -48,6 +50,7 @@ public class State_CmdBuild : CommandState {
                 //initialize substates
                 deliver.SetPosition(cc.foundation.transform.position);
                 construct.SetTarget(cc.foundation);
+                getTool.SetCommand(cc);
 
                 break;
             }

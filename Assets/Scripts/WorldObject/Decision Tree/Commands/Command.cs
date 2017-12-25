@@ -34,12 +34,15 @@ public class Command {
     public bool paused = false;
     //position for flag location
     public Vector3 position;
+    //owning player
+    public Player owner;
 
-	//TODO this is only for the move command
-	public Command(TYPES t, Vector3 pos) {
+    //TODO this is only for the move command
+    public Command(TYPES t, Vector3 pos, Player owner) {
 		type = t;
 		actors = new List<Unit> ();
         position = pos;
+        this.owner = owner;
 	}
 
     public virtual void Cancel() {
