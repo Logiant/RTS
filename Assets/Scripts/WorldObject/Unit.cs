@@ -42,8 +42,21 @@ public class Unit : WorldObject {
 	protected Vector3 targetPosition;
 	public float speed = 3.5f; // m/s
 
-	// Use this for initialization
-	public override void Start () {
+    //animator and other aesthetics
+    protected Animator anim;
+    //mount locations
+    public GameObject RHand;
+    private GameObject equipped;
+
+    //prefabs -- MOVE THIS INTO THE TOOL CLASS AND DO TOOL.GETMODEL()
+    public GameObject axe;
+    public GameObject hammer;
+    public GameObject saw;
+    public GameObject scythe;
+
+
+    // Use this for initialization
+    public override void Start () {
         bp = new Backpack();
         nav = GetComponent<NavMeshAgent>();
 		targetPosition = transform.position;
@@ -51,6 +64,8 @@ public class Unit : WorldObject {
         brain = new TreeChurl(this);
         PickState (); //instantiates brain
         player.addUnit(this);
+
+        anim = GetComponent<Animator>();
 	}
 	//set target position
     public void MoveTo(Vector3 target) {
@@ -70,6 +85,12 @@ public class Unit : WorldObject {
 		if (brain != null) {
 			brain.Update (this.player.activeCommands); //feed in active commands from the player
 		}
+        //update animations
+        if (anim != null) {
+            anim.SetFloat("Speed", nav.velocity.magnitude / nav.speed);
+
+            anim.SetBool("Punching", brain.getCommand().type != Command.TYPES.MOVE && brain.getCommand().type != Command.TYPES.NONE && anim.GetFloat("Speed") < 0.05);
+        }
 	}
 
     public void Halt() {
@@ -80,23 +101,31 @@ public class Unit : WorldObject {
         Tool tmp = tool;
         tool = t;
         Debug.Log(t.GetToolType() + " TOOL TYPE");
+        if (equipped != null) {
+            Destroy(equipped);
+        }
         switch(t.GetToolType()) {
             case Tool.TOOLTYPES.AXE:
                 type = TYPES.GATHERER;
+                equipped = Instantiate(axe, RHand.transform);
                 break;
             case Tool.TOOLTYPES.HAMMER:
                 type = TYPES.CRAFTSMAN;
+                equipped = Instantiate(hammer, RHand.transform);
                 break;
             case Tool.TOOLTYPES.SCYTHE:
                 type = TYPES.FARMER;
+                equipped = Instantiate(scythe, RHand.transform);
                 break;
             case Tool.TOOLTYPES.SAW:
                 type = TYPES.LABORER;
+                equipped = Instantiate(saw, RHand.transform);
                 break;
             case Tool.TOOLTYPES.NONE:
                 type = TYPES.CHURL;
                 break;
         }
+        equipped.transform.Rotate(equipped.transform.right, 180);
         PickState();
         return tmp;
     }

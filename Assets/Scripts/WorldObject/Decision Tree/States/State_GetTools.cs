@@ -87,7 +87,6 @@ public class State_GetTools : State {
                 toolType = Tool.TOOLTYPES.NONE;
                 break;
         }
-        Debug.Log("Set! Getting tool " + toolType);
         //TODO get the nearest workshop
         target = RTS.Utility.GetNearestWarehouse(parent.GetUnit().transform.position, (parent.GetUnit().player.getWarehouses()));
 

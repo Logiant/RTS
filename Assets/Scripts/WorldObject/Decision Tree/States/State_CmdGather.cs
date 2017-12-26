@@ -72,8 +72,9 @@ public class State_CmdGather : CommandState {
 			if (parent.getCommand() is CmdHarvest) {
 				CmdHarvest ch = (CmdHarvest)parent.getCommand();
 				harvest.SetTarget (ch.resource);
-			}
-		}
+                getTool.SetCommand(ch);
+            }
+        }
 	}
 
 	//each sate must reset-able
